@@ -19,12 +19,12 @@ export const metadata: Metadata = {
   },
   description:
     "The916 is a creator-powered movement building ethical influence, real-world impact, and faith-anchored innovation — restoring virtue, building culture, and pointing hearts to Jesus.",
-  metadataBase: new URL("https://the916.vercel.app"), // update later to your real domain
+  metadataBase: new URL("https://the916.com"),
   openGraph: {
     title: "The916 — Multiply What You Have",
     description:
       "A creator-powered movement restoring virtue, building culture, and pointing hearts to Jesus.",
-    url: "https://the916.vercel.app",
+    url: "https://the916.com",
     siteName: "The916",
     locale: "en_GB",
     type: "website",
@@ -46,10 +46,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" className="dark">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+      >
         {children}
       </body>
     </html>
   );
+}
 }
