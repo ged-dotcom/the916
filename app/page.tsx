@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, type Variants } from "framer-motion";
+import { Analytics } from '@vercel/analytics/react'
+import Link from "next/link";
 import { 
   ArrowUpRight, ChevronRight, Gauge, Zap, Shield, 
   Cog, Fuel, Navigation, Bluetooth, Wifi, Radio, 
@@ -447,12 +449,16 @@ export default function The916LandingPage() {
             </motion.p>
             
             <motion.div variants={fadeUpVariant} className="flex flex-col items-start gap-6">
-              <button className="group flex items-center justify-between md:justify-start gap-6 bg-primary text-primary-foreground rounded-full pl-8 pr-2 py-2 text-base md:text-lg font-bold hover:scale-[1.02] transition-all duration-300 w-full md:w-auto shadow-[0_0_30px_rgba(255,255,255,0.05)]">
-                Join the Movement
-                <div className="p-3 bg-foreground text-primary rounded-full group-hover:bg-[hsl(25,100%,50%)] group-hover:text-white transition-colors">
-                  <ArrowUpRight size={24} className="group-hover:rotate-45 transition-transform" />
-                </div>
-              </button>
+             <Link
+  href="/join"
+  className="group inline-flex items-center justify-between md:justify-start gap-6 bg-primary px-6 py-3 rounded-full"
+>
+  <span>Join the Movement</span>
+
+  <span className="p-3 bg-foreground text-primary rounded-full group-hover:bg-[hsl(25,100%,50%)]">
+    <ArrowUpRight size={24} className="group-hover:rotate-45 transition-transform" />
+  </span>
+</Link>
               <a href="#manifesto" className="text-primary/60 hover:text-primary text-xs md:text-sm font-medium transition-colors underline-offset-4 hover:underline md:ml-4">
                 Or: Download the Manifesto
               </a>
