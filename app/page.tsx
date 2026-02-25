@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { 
   ArrowUpRight, ChevronRight, Gauge, Zap, Shield, 
   Cog, Fuel, Navigation, Bluetooth, Wifi, Radio, 
@@ -9,29 +9,32 @@ import {
 } from "lucide-react";
 
 // --- Framer Motion Cinematic Variants ---
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.15 }
-  }
+    transition: { staggerChildren: 0.15 },
+  },
 };
 
-const fadeUpVariant = {
+const fadeUpVariant: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } 
-  }
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
 };
 
-const fadeInVariant = {
+const fadeInVariant: Variants = {
   hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1, 
-    transition: { duration: 1, ease: "easeOut" } 
-  }
+  visible: {
+    opacity: 1,
+    transition: { duration: 1, ease: "easeOut" },
+  },
 };
 
 export default function The916LandingPage() {
