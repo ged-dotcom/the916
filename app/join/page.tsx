@@ -1,19 +1,15 @@
 "use client";
 
 import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
 import { ArrowUpRight, ArrowLeft } from "lucide-react";
 
-// Framer Motion expects a typed cubic-bezier tuple (not number[])
 const easeOutQuint = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-// --- Framer Motion Cinematic Variants ---
 const staggerContainer: Variants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
 };
 
 const fadeUpVariant: Variants = {
@@ -26,9 +22,49 @@ const fadeUpVariant: Variants = {
 };
 
 export default function JoinPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const isSubmitted = searchParams.get("success") === "true";
+
+  const [email, setEmail] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/kit/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Signup failed. Please try again.");
+      }
+
+      router.replace("/join?success=true");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function resetToForm() {
+    setEmail("");
+    setError(null);
+    router.replace("/join");
+  }
+
   return (
     <main className="relative min-h-screen bg-background text-primary overflow-hidden flex items-center justify-center py-24 px-6 md:px-12">
-      {/* Subtle cinematic glow in the background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_100%)] pointer-events-none" />
 
       <motion.div
@@ -57,33 +93,74 @@ export default function JoinPage() {
           variants={fadeUpVariant}
           className="mt-6 text-lg md:text-xl text-primary/70 max-w-xl font-light leading-relaxed"
         >
-          Get updates, resources, and early access to Collective drops and local
-          projects. No noise. Just mission.
+          Get updates, resources, and early access to Collective drops and local projects. No noise. Just mission.
         </motion.p>
 
-        {/* Action Card */}
         <motion.div
           variants={fadeUpVariant}
           className="mt-12 w-full max-w-2xl bg-primary/5 backdrop-blur-2xl border border-primary/10 rounded-3xl p-8 md:p-12 shadow-2xl"
         >
           <h2 className="text-2xl font-medium mb-2">Secure your spot</h2>
-          <p className="text-base text-primary/60 font-light leading-relaxed">
-            For now, we're collecting signups directly via email. Click below to
-            send a quick message—we'll manually add you to the list.
-          </p>
 
-          <a
-            href="mailto:hello@the916.com?subject=Join%20The916&body=Please%20add%20me%20to%20The916.%0D%0A%0D%0AName:%20"
-            className="group mt-8 inline-flex items-center gap-4 rounded-full bg-primary text-primary-foreground pl-8 pr-2 py-2 text-base md:text-lg font-bold hover:scale-[1.02] transition-all duration-300 w-fit shadow-[0_0_30px_rgba(255,255,255,0.05)]"
-          >
-            Join via Email
-            <div className="p-3 bg-foreground text-primary rounded-full group-hover:bg-[hsl(25,100%,50%)] group-hover:text-white transition-colors">
-              <ArrowUpRight
-                size={20}
-                className="group-hover:rotate-45 transition-transform"
-              />
-            </div>
-          </a>
+          {isSubmitted ? (
+            <>
+              <p className="text-base text-primary/70 font-light leading-relaxed mt-2">
+                You’re almost in.
+              </p>
+
+              <p className="mt-4 text-sm text-primary/50 leading-relaxed max-w-md">
+                Check your inbox and click the confirmation link to lock in your spot.
+              </p>
+
+              <button
+                type="button"
+                onClick={resetToForm}
+                className="mt-6 inline-flex items-center gap-2 text-sm text-primary/60 hover:text-primary transition-colors font-medium"
+              >
+                Didn’t mean to? Submit another email
+                <ArrowUpRight size={14} className="opacity-70" />
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="text-base text-primary/60 font-light leading-relaxed">
+                Drop your email and we’ll add you to the early list (you’ll confirm via email).
+              </p>
+
+              <form className="mt-8 w-full" onSubmit={handleSubmit}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email address"
+                    className="w-full flex-1 rounded-full border border-primary/20 bg-transparent px-5 py-3 text-base text-primary placeholder:text-primary/40 outline-none focus:border-primary/40"
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="group inline-flex items-center justify-center gap-4 rounded-full bg-primary text-primary-foreground pl-8 pr-2 py-2 text-base md:text-lg font-bold hover:scale-[1.02] transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.05)] disabled:opacity-70 disabled:hover:scale-100"
+                  >
+                    {loading ? "Joining..." : "Join"}
+                    <span className="p-3 bg-foreground text-primary rounded-full group-hover:bg-[hsl(25,100%,50%)] group-hover:text-white transition-colors">
+                      <ArrowUpRight
+                        size={20}
+                        className="group-hover:rotate-45 transition-transform"
+                      />
+                    </span>
+                  </button>
+                </div>
+
+                {error ? (
+                  <p className="mt-3 text-xs text-red-400">{error}</p>
+                ) : (
+                  <p className="mt-3 text-xs text-primary/40">You’ll be asked to confirm via email.</p>
+                )}
+              </form>
+            </>
+          )}
 
           <div className="mt-8 pt-6 border-t border-primary/10">
             <p className="text-xs text-primary/40 font-medium tracking-wide uppercase">
@@ -97,10 +174,7 @@ export default function JoinPage() {
           href="/"
           className="group mt-12 inline-flex items-center gap-2 text-sm text-primary/50 hover:text-primary transition-colors font-medium"
         >
-          <ArrowLeft
-            size={16}
-            className="group-hover:-translate-x-1 transition-transform"
-          />
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           Back to home
         </motion.a>
       </motion.div>
