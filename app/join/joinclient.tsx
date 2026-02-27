@@ -137,7 +137,7 @@ export default function JoinClient() {
                     className="group inline-flex items-center justify-center gap-4 rounded-full bg-primary text-primary-foreground pl-8 pr-2 py-2 text-base md:text-lg font-bold hover:scale-[1.02] transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.05)] disabled:opacity-70 disabled:hover:scale-100"
                   >
                     {loading ? "Joining..." : "Join"}
-                    <span className="p-3 bg-foreground text-primary rounded-full group-hover:bg-[hsl(25,100%,50%)] group-hover:text-white transition-colors">
+                    <span className="p-3 bg-foreground text-primary rounded-full group-hover:bg-accent group-hover:text-white transition-colors">
                       <ArrowUpRight size={20} className="group-hover:rotate-45 transition-transform" />
                     </span>
                   </button>

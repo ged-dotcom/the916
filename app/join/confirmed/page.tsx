@@ -83,7 +83,7 @@ export default function ConfirmedPage() {
                 <span className="text-primary/80 group-hover:text-primary transition-colors">
                   {cta.label}
                 </span>
-                <span className="p-3 bg-foreground text-primary rounded-full group-hover:bg-[hsl(25,100%,50%)] group-hover:text-white transition-colors">
+                <span className="p-3 bg-foreground text-primary rounded-full group-hover:bg-accent group-hover:text-white transition-colors">
                   <ArrowUpRight size={18} className="group-hover:rotate-45 transition-transform" />
                 </span>
               </a>
